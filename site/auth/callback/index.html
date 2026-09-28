@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Powerwall Control sign-in</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
+    textarea { width: 100%; font-family: ui-monospace, monospace; font-size: 0.85rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Powerwall Control</h1>
+
+  <div id="ok" class="hidden">
+    <p>Returning to the app&hellip;</p>
+    <p><a id="open-app" href="#">Open Powerwall Control</a></p>
+    <details>
+      <summary>Signing in from a desktop script?</summary>
+      <p>Copy this whole URL and paste it into the script prompt:</p>
+      <textarea id="url" rows="4" readonly></textarea>
+      <p><button id="copy" type="button">Copy</button></p>
+    </details>
+  </div>
+
+  <div id="error" class="hidden">
+    <p>Sign-in did not complete.</p>
+    <p id="error-text"></p>
+  </div>
+
+  <div id="empty" class="hidden">
+    <p>This page handles the Tesla sign-in redirect. There's nothing to do here directly.</p>
+  </div>
+
+  <script>
+    // Static fallback for the OAuth redirect. If Android App Links open the app,
+    // this page never loads. Otherwise, forward ?code=&state= to the app's custom scheme.
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var show = function (id) { document.getElementById(id).classList.remove('hidden'); };
+
+      if (params.get('error')) {
+        document.getElementById('error-text').textContent =
+          params.get('error') + ': ' + (params.get('error_description') || '');
+        show('error');
+        return;
+      }
+
+      if (!params.get('code')) {
+        show('empty');
+        return;
+      }
+
+      var appUrl = 'uk.co.versible.powerwall://callback' + window.location.search;
+      document.getElementById('open-app').href = appUrl;
+      document.getElementById('url').value = window.location.href;
+      document.getElementById('copy').addEventListener('click', function () {
+        var box = document.getElementById('url');
+        box.select();
+        navigator.clipboard ? navigator.clipboard.writeText(box.value) : document.execCommand('copy');
+      });
+      show('ok');
+
+      if (/Android/i.test(navigator.userAgent)) {
+        window.location.href = appUrl;
+      }
+    })();
+  </script>
+</body>
+</html>

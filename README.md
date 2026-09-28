@@ -109,6 +109,8 @@ openssl ecparam -name prime256v1 -genkey -noout -out private-key.pem
 openssl ec -in private-key.pem -pubout -out public-key.pem
 ```
 
+Or, without openssl: `python scripts/generate_keys.py`, which writes the public key into `site/` and the private key to `~/.powerwall-control/`.
+
 Publish `public-key.pem` at `site/.well-known/appspecific/com.tesla.3p.public-key.pem`. Keep `private-key.pem` **offline and out of git**. It is only needed for signed *vehicle* commands; Powerwall commands don't use it.
 
 ### 3. Register the Tesla developer application

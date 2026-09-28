@@ -1,0 +1,33 @@
+# Secrets — never commit (this repo is public)
+.env
+.env.*
+!.env.example
+*.pem
+!site/.well-known/appspecific/com.tesla.3p.public-key.pem
+
+# Python scripts: venv, cached tokens, raw API dumps
+scripts/.venv/
+scripts/.tokens.json
+scripts/out/
+__pycache__/
+
+# Node / Nuxt
+node_modules/
+.nuxt/
+.output/
+.data/
+dist/
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+*.keystore
+*.jks
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
