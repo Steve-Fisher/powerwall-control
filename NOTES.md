@@ -8,14 +8,10 @@ Working notes for picking the build back up. The plan itself is in the README ("
 |---|---|
 | 1. Tesla onboarding | Repo side done (`site/`, `scripts/`, keys generated). **Account/DNS work still to do**, see below. |
 | 2. API exploration | `scripts/check_site.py` written, **not yet run** (needs step 1 done). |
-| 3. App skeleton | Built and compiling. **Not committed yet.** Real sign-in untested (needs steps 1–2). |
+| 3. App skeleton | Built, compiling and pushed. Real sign-in untested (needs steps 1–2). |
 | 4–7 | Not started. |
 
-Git: `c1b099f` (onboarding tooling) is pushed. Everything from step 3 (`app/`, `android/`, `package.json`, Nuxt/Capacitor/vitest config, README tweaks, `site/.well-known/assetlinks.json` fingerprint) is uncommitted in the working tree.
-
-## First thing tomorrow
-
-1. **Commit and push step 3**: `git add . && git commit` then `git push origin main`. The first push asks for the fine-grained token. In the Git Credential Manager window, choose **Token**, not browser sign-in.
+Git: everything is committed and pushed (onboarding tooling `c1b099f`, app skeleton `47a49ba`). The fine-grained token is saved in Git Credential Manager, so pushes work without a prompt.
 
 ## To do by hand (step 1)
 
