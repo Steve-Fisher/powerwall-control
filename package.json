@@ -1,0 +1,33 @@
+{
+  "name": "powerwall-control",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "android": "nuxt generate && cap sync android && cap run android",
+    "android:sync": "nuxt generate && cap sync android"
+  },
+  "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.1",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/preferences": "^8.0.1",
+    "nuxt": "^4.5.2",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.2",
+    "vue-tsc": "^3.3.11"
+  }
+}

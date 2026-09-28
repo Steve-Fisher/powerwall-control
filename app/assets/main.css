@@ -1,0 +1,92 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #16181d;
+  --muted: #5f6673;
+  --border: #dde1e7;
+  --accent: #1a73e8;
+  --accent-text: #ffffff;
+  --error: #c62828;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111317;
+    --surface: #1b1e24;
+    --text: #e8eaee;
+    --muted: #9aa1ad;
+    --border: #2c313a;
+    --accent: #6ea8fe;
+    --accent-text: #0b1220;
+    --error: #ef9a9a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+.shell {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 16px 32px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+}
+.bar h1 { font-size: 1.25rem; margin: 0; }
+
+.badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card h2 { font-size: 1.1rem; margin: 0 0 8px; }
+
+.row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+}
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+button {
+  font: inherit;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+button:disabled { opacity: 0.6; cursor: default; }
+button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); width: 100%; padding: 12px; }
+button.link { border: none; background: none; color: var(--accent); padding: 0; }
+
+.error { color: var(--error); }
+.muted { color: var(--muted); }

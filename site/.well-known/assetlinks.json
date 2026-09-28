@@ -5,7 +5,7 @@
       "namespace": "android_app",
       "package_name": "uk.co.versible.powerwall",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_SIGNING_CERT_SHA256 (see README step 6)"
+        "B8:23:B4:D7:8A:06:37:13:8E:67:C5:0E:F7:A1:47:BF:D5:43:2D:C6:6D:F1:A6:BE:A3:80:DF:CB:5B:A0:FC:AE"
       ]
     }
   }

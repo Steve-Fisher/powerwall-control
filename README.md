@@ -58,7 +58,7 @@ Region base URL (UK/EU): `https://fleet-api.prd.eu.vn.cloud.tesla.com`
 
 ```
 ┌───────────────────────── Android phone ──────────────────────────┐
-│  Nuxt 3 SPA (Vue, TypeScript) inside a Capacitor native shell     │
+│  Nuxt 4 SPA (Vue, TypeScript) inside a Capacitor native shell     │
 │                                                                   │
 │  Slot picker ─► Tariff builder ─► Tesla API client ──────────────►│──► Tesla Fleet API (EU)
 │       │                                 │  (CapacitorHttp: native │
@@ -81,7 +81,7 @@ The static site runs no code on a server. It exists because Tesla requires a dom
 
 | Part | Choice | Why |
 |---|---|---|
-| UI | **Nuxt 3** (`ssr: false`, `nuxt generate`) + Vue 3 + TypeScript | Existing skill set |
+| UI | **Nuxt 4** (`ssr: false`, `nuxt generate`) + Vue 3 + TypeScript | Existing skill set |
 | Android packaging | **Capacitor** | Wraps the static build as a native APK |
 | HTTP | `CapacitorHttp` | Native requests, so no browser CORS limits |
 | OAuth browser | `@capacitor/browser` (Chrome Custom Tab) | Tesla login page |
@@ -149,7 +149,7 @@ NUXT_PUBLIC_TESLA_API_BASE=https://fleet-api.prd.eu.vn.cloud.tesla.com
 
 ### 6. Link the OAuth redirect to the app
 
-Put the SHA-256 fingerprint of your app signing certificate into `site/.well-known/assetlinks.json`. Get it with `./gradlew signingReport` from `android/`. Tapping the redirect link then opens the app directly.
+Put the SHA-256 fingerprint of your app signing certificate into `site/.well-known/assetlinks.json`. Get it with `./gradlew signingReport` from `android/`. Tapping the redirect link then opens the app directly. The file already holds this machine's **debug** key fingerprint. If you build a release APK with its own key, add that fingerprint to the list as well.
 
 If App Links misbehave, `site/auth/callback/index.html` forwards `?code=…&state=…` to the custom scheme `uk.co.versible.powerwall://callback`, which the app also handles.
 
@@ -157,17 +157,21 @@ If App Links misbehave, `site/auth/callback/index.html` forwards `?code=…&stat
 
 ## Build and install
 
-Requires Node 20+, Android Studio (for the SDK and JDK), and a phone with USB debugging enabled.
+Requires Node 22.19+ or 24.11+, Android Studio (for the SDK and JDK), and a phone with USB debugging enabled. If `java` isn't on your PATH, point Gradle at Android Studio's bundled JDK first, e.g. in PowerShell: `$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"`.
 
 ```bash
 npm install
+npm run android             # nuxt generate → cap sync → build and install on the connected phone
+# or step by step:
 npm run generate            # nuxt generate → .output/public
 npx cap sync android        # copy the web build + plugins into android/
-npx cap run android         # build and install on the connected phone
-# or: cd android && ./gradlew assembleRelease
+npx cap run android
+# or: cd android && ./gradlew assembleDebug
 ```
 
-During UI development, `npm run dev` runs the app in a desktop browser with a mocked Tesla client (the real API rejects browser CORS requests).
+During UI development, `npm run dev` runs the app in a desktop browser with a mocked Tesla client (the real API rejects browser CORS requests). A "mock" badge shows when it is active.
+
+Tests and type checks: `npm test`, `npm run typecheck`.
 
 ---
 
