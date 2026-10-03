@@ -1,0 +1,123 @@
+{
+  "name": "A",
+  "utility": "A",
+  "daily_charges": [
+    {
+      "name": "Charge"
+    }
+  ],
+  "demand_charges": {
+    "ALL": {
+      "rates": {
+        "ALL": 0
+      }
+    },
+    "Summer": {},
+    "Winter": {}
+  },
+  "energy_charges": {
+    "ALL": {
+      "rates": {
+        "ALL": 0
+      }
+    },
+    "Summer": {
+      "rates": {
+        "ON_PEAK": 1,
+        "SUPER_OFF_PEAK": 0
+      }
+    },
+    "Winter": {}
+  },
+  "seasons": {
+    "Summer": {
+      "fromDay": 1,
+      "toDay": 31,
+      "fromMonth": 1,
+      "toMonth": 12,
+      "tou_periods": {
+        "ON_PEAK": {
+          "periods": [
+            {
+              "toDayOfWeek": 6,
+              "fromHour": 5,
+              "toHour": 2
+            }
+          ]
+        },
+        "SUPER_OFF_PEAK": {
+          "periods": [
+            {
+              "toDayOfWeek": 6,
+              "fromHour": 2,
+              "toHour": 5
+            }
+          ]
+        }
+      }
+    },
+    "Winter": {}
+  },
+  "sell_tariff": {
+    "name": "A",
+    "utility": "A",
+    "daily_charges": [
+      {
+        "name": "Charge"
+      }
+    ],
+    "demand_charges": {
+      "ALL": {
+        "rates": {
+          "ALL": 0
+        }
+      },
+      "Summer": {},
+      "Winter": {}
+    },
+    "energy_charges": {
+      "ALL": {
+        "rates": {
+          "ALL": 0
+        }
+      },
+      "Summer": {
+        "rates": {
+          "ON_PEAK": 0.12,
+          "SUPER_OFF_PEAK": 0.12
+        }
+      },
+      "Winter": {}
+    },
+    "seasons": {
+      "Summer": {
+        "fromDay": 1,
+        "toDay": 31,
+        "fromMonth": 1,
+        "toMonth": 12,
+        "tou_periods": {
+          "ON_PEAK": {
+            "periods": [
+              {
+                "toDayOfWeek": 6,
+                "fromHour": 5,
+                "toHour": 2
+              }
+            ]
+          },
+          "SUPER_OFF_PEAK": {
+            "periods": [
+              {
+                "toDayOfWeek": 6,
+                "fromHour": 2,
+                "toHour": 5
+              }
+            ]
+          }
+        }
+      },
+      "Winter": {}
+    }
+  },
+  "version": 1
+}
