@@ -10,8 +10,9 @@ Working notes for picking the build back up. The plan itself is in the README ("
 | 2. API exploration | **Done.** `check_site.py` ran; real tariff fixture committed (`86b70de`). |
 | 3. App skeleton | **Done.** Real sign-in tested on the phone (3 Oct 2026): signed in, shows battery and mode. |
 | 4. Tariff builder | **Written and tested** (`app/lib/tariff/builder.ts`, tests against the real fixture). |
-| 5. Plan and apply UI | **Written, tested on the mock only, not yet committed or run against the real Powerwall.** |
-| 6–7 | Not started. |
+| 5. Plan and apply UI | **Done and pushed** (`8f68c57`, fix `c27a43d`). |
+| 6. Real-world check | **Partly done.** Timed Charge Set worked on the real Powerwall from the phone: tariff upload, Time-Based Control and grid charging all succeeded (3 Oct 2026). Still to confirm: the schedule in the Tesla app, that it really charges in the chosen slot, and whether it charges hard enough. |
+| 7. Polish | Not started. |
 
 ## v1 design (supersedes the per-date plan in the README)
 
@@ -64,9 +65,9 @@ Tap Sign in with Tesla. The app comes back signed in and shows battery % and mod
 
 Result of the first real test (3 Oct 2026): sign-in worked, battery and mode shown, "Tariff backup: Saved" appeared, and the redirect opened the app directly (App Links verified, fallback not needed).
 
-## Tariff builder: unverified Tesla format assumptions (check in step 6)
+## Tariff builder: Tesla format assumptions
 
-The fixture only has one all-week period pair, so these are assumptions, each isolated in `builder.ts`:
+Tesla **accepted** the first real upload (3 Oct 2026), so the formats below are at least valid. Whether the schedule then behaves as intended (right slot, charging happens) is still to be confirmed. The fixture only has one all-week period pair, so these were assumptions, each isolated in `builder.ts`:
 
 - (Day-of-week numbering no longer matters: every day gets the same pattern, written as days 0 to 6.)
 - `fromMinute` / `toMinute` are honoured for the half-hour boundaries (the fixture has no minute fields).
@@ -75,7 +76,15 @@ The fixture only has one all-week period pair, so these are assumptions, each is
 
 Apply a single slot and compare with the Tesla app and `live_status`. If Tesla rejects the upload, fix the format in `builder.ts`, not the callers.
 
+## Using the app day to day
+
+- The debug build installed over USB runs on its own; the phone doesn't need to be connected. Its data (signed-in session, saved slots, tariff backup) survives until the app is uninstalled, so don't uninstall it.
+- To install a new version, plug in, enable USB debugging and run `npm run android`. USB debugging can stay off the rest of the time.
+- Bug fixed on 3 Oct 2026: `structuredClone` can't copy Vue reactive proxies, so the builder clones through JSON (regression test added).
+
 ## Next build work
+
+- **Finish step 6:** check the schedule in the Tesla app and that the Powerwall charges in the selected slot.
 
 - The status UI currently lives on `pages/index.vue`. Step 5 replaces it with the planner and moves status to its own page.
 - Small fix: make `check_site.py` print "not reported" instead of `None` for grid charging.
