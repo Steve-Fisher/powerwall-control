@@ -65,12 +65,12 @@ export function buildTariff({ slots, base, prices = DEFAULT_PRICES }: BuildTarif
     Winter: {},
   })
 
-  const result = structuredClone(base)
+  const result = clone(base)
   result.seasons = seasons
   result.energy_charges = rates(prices.cheap, prices.expensive)
-  const sell = isObject(base.sell_tariff) ? structuredClone(base.sell_tariff) : structuredClone(base)
+  const sell = isObject(base.sell_tariff) ? clone(base.sell_tariff) : clone(base)
   delete sell.sell_tariff
-  sell.seasons = structuredClone(seasons)
+  sell.seasons = clone(seasons)
   sell.energy_charges = rates(prices.sell, prices.sell)
   result.sell_tariff = sell
   return result
@@ -107,6 +107,14 @@ function buildTouPeriods(selected: readonly boolean[]) {
     from = i
   }
   return result
+}
+
+/**
+ * Deep copy via JSON. `structuredClone` throws on Vue reactive proxies, which is what the app
+ * passes in, and a tariff is plain JSON anyway.
+ */
+function clone<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
 }
 
 function isObject(value: unknown): value is Obj {

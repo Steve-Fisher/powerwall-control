@@ -47,6 +47,16 @@ describe('buildTariff', () => {
     expect(t.seasons.Summer).toMatchObject({ fromDay: 1, toDay: 31, fromMonth: 1, toMonth: 12 })
   })
 
+  it('accepts a base wrapped in a Proxy, like Vue reactive state', () => {
+    const wrap = <T extends object>(o: T): T =>
+      new Proxy(o, { get: (target, key) => {
+        const v = Reflect.get(target, key)
+        return typeof v === 'object' && v !== null ? wrap(v) : v
+      } })
+    const t = buildTariff({ slots: [2, 3], base: wrap(base) }) as Record<string, any>
+    expect(t).toEqual(build([2, 3]))
+  })
+
   it('does not modify the base tariff', () => {
     const before = JSON.stringify(base)
     build([0, 1, 46, 47])
