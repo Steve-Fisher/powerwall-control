@@ -11,7 +11,7 @@ Working notes for picking the build back up. The plan itself is in the README ("
 | 3. App skeleton | **Done.** Real sign-in tested on the phone (3 Oct 2026): signed in, shows battery and mode. |
 | 4. Tariff builder | **Written and tested** (`app/lib/tariff/builder.ts`, tests against the real fixture). |
 | 5. Plan and apply UI | **Done and pushed** (`8f68c57`, fix `c27a43d`). |
-| 6. Real-world check | **Partly done.** Timed Charge Set worked on the real Powerwall from the phone: tariff upload, Time-Based Control and grid charging all succeeded (3 Oct 2026). Still to confirm: the schedule in the Tesla app, that it really charges in the chosen slot, and whether it charges hard enough. |
+| 6. Real-world check | **Done** (3 Oct 2026). Timed Charge Set worked on the real Powerwall from the phone: tariff upload, Time-Based Control and grid charging all succeeded, and the Tesla app reflects the changes. Not measured: how hard it charges over a longer run. Revisit the prices only if it under-charges in daily use. |
 | 7. Polish | Not started. |
 
 ## v1 design (supersedes the per-date plan in the README)
@@ -67,7 +67,7 @@ Result of the first real test (3 Oct 2026): sign-in worked, battery and mode sho
 
 ## Tariff builder: Tesla format assumptions
 
-Tesla **accepted** the first real upload (3 Oct 2026), so the formats below are at least valid. Whether the schedule then behaves as intended (right slot, charging happens) is still to be confirmed. The fixture only has one all-week period pair, so these were assumptions, each isolated in `builder.ts`:
+Tesla **accepted** the first real upload (3 Oct 2026) and the Tesla app showed the schedule as set, so these formats are confirmed to work. The fixture only has one all-week period pair, so these were assumptions, each isolated in `builder.ts`:
 
 - (Day-of-week numbering no longer matters: every day gets the same pattern, written as days 0 to 6.)
 - `fromMinute` / `toMinute` are honoured for the half-hour boundaries (the fixture has no minute fields).
@@ -84,10 +84,11 @@ Apply a single slot and compare with the Tesla app and `live_status`. If Tesla r
 
 ## Next build work
 
-- **Finish step 6:** check the schedule in the Tesla app and that the Powerwall charges in the selected slot.
+**Status (3 Oct 2026): v1 is finished.** Step 7 was deliberately skipped; the plan is to use the app for a week or two and see how it behaves. Come back only if something needs fixing (for example under-charging). The ideas below are optional.
 
-- The status UI currently lives on `pages/index.vue`. Step 5 replaces it with the planner and moves status to its own page.
+- **Step 7, polish** (skipped for now): Restore original tariff button, drag to select a range of slots, clearer error messages, a separate status page.
 - Small fix: make `check_site.py` print "not reported" instead of `None` for grid charging.
+- Status and the planner currently share `pages/index.vue`.
 
 ## Useful facts
 
