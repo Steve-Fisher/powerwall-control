@@ -1,7 +1,7 @@
 """Generate the prime256v1 key pair Tesla needs for partner registration.
 
 Equivalent to the openssl commands in the README, for machines without openssl.
-The public key goes into site/ (published); the private key goes OUTSIDE the repo.
+The public key goes into .well-known/ at the repo root (published by GitHub Pages); the private key goes OUTSIDE the repo.
 """
 
 from __future__ import annotations

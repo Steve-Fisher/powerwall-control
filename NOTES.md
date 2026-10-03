@@ -8,8 +8,25 @@ Working notes for picking the build back up. The plan itself is in the README ("
 |---|---|
 | 1. Tesla onboarding | **Done.** Site is live over HTTPS, Tesla developer app created, domain registered in the EU region. |
 | 2. API exploration | **Done.** `check_site.py` ran; real tariff fixture committed (`86b70de`). |
-| 3. App skeleton | Built and pushed. **Real sign-in on the phone is being tested** (see below). |
-| 4–7 | Not started. Step 4 is unblocked. |
+| 3. App skeleton | **Done.** Real sign-in tested on the phone (3 Oct 2026): signed in, shows battery and mode. |
+| 4. Tariff builder | **Written and tested** (`app/lib/tariff/builder.ts`, tests against the real fixture). |
+| 5. Plan and apply UI | **Written, tested on the mock only, not yet committed or run against the real Powerwall.** |
+| 6–7 | Not started. |
+
+## v1 design (supersedes the per-date plan in the README)
+
+Decided 3 Oct 2026. Keep it very simple:
+
+- Top choice: **Self Powered** or **Timed Charge**.
+- Self Powered + Set: sets operation mode `self_consumption`. Nothing else is touched.
+- Timed Charge shows 48 half-hour boxes. Tap to select, then **Set** runs three steps in order, stopping at the first failure: upload tariff, set `autonomous` (Time-Based Control), allow grid charging.
+- One daily pattern repeats all 7 days; there are no dates, no today/tomorrow. It stays in force until changed.
+- Prices (£/kWh): selected slot buy 0, other slots buy 0.99, sell 0.12 everywhere.
+- Selected slots are saved on the phone (`plan.slots`) after a successful Set.
+- There is no "Restore original tariff" button in v1. The original is backed up on the phone, but the only way back is the Tesla app for now.
+- The README was updated on 3 Oct 2026 to describe this design and the repo-root hosting.
+
+Code: `app/lib/tariff/builder.ts`, write calls in `app/lib/tesla/client.ts`, `app/composables/usePlan.ts`, UI in `app/pages/index.vue`.
 
 Git: everything is committed and pushed. The fine-grained token is saved in Git Credential Manager, so pushes from this repo work without a prompt.
 
@@ -35,20 +52,31 @@ Git: everything is committed and pushed. The fine-grained token is saved in Git 
 - Current tariff (fixture `app/lib/tariff/__fixtures__/tariff_content_v2.json`): one all-year season, `SUPER_OFF_PEAK` 02:00-05:00 priced 0, `ON_PEAK` 05:00-02:00 priced 1, sell tariff flat 0.12, empty `Winter`. Periods use `toDayOfWeek: 6` with no `fromDayOfWeek`. No personal data in it.
 - Raw dumps are in `scripts/out/` (git-ignored).
 
-## In progress: test the app on the phone (step 3)
+## Running the app on the phone
 
-```powershell
-$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+```
 npm run android
 ```
 
-Tap Sign in with Tesla. The app should come back signed in and show battery %, mode and "Tariff backup: Saved". If the redirect lands on the web page instead of the app, tap "Open Powerwall Control" on it (the custom-scheme fallback). App Links only verify once `assetlinks.json` is live, and it now is.
+`JAVA_HOME` (`C:\Program Files\Android\Android Studio\jbr`) and `ANDROID_HOME` (`C:\Users\steve\AppData\Local\Android\Sdk`) are now set permanently as user environment variables (via `setx`). Open a new terminal after changing them. The phone needs USB debugging on.
 
-Record the result here once known (works / what broke).
+Tap Sign in with Tesla. The app comes back signed in and shows battery % and mode. If the redirect lands on the web page instead of the app, tap "Open Powerwall Control" on it (the custom-scheme fallback).
+
+Result of the first real test (3 Oct 2026): sign-in worked, battery and mode shown, "Tariff backup: Saved" appeared, and the redirect opened the app directly (App Links verified, fallback not needed).
+
+## Tariff builder: unverified Tesla format assumptions (check in step 6)
+
+The fixture only has one all-week period pair, so these are assumptions, each isolated in `builder.ts`:
+
+- (Day-of-week numbering no longer matters: every day gets the same pattern, written as days 0 to 6.)
+- `fromMinute` / `toMinute` are honoured for the half-hour boundaries (the fixture has no minute fields).
+- A period ending at midnight is written `toHour: 0, toMinute: 0`; a whole day is `0:00 → 0:00` (`slotToClock`).
+- With nothing selected the tariff is a single all-day `ON_PEAK` period. If `SUPER_OFF_PEAK` is unused, its key is omitted.
+
+Apply a single slot and compare with the Tesla app and `live_status`. If Tesla rejects the upload, fix the format in `builder.ts`, not the callers.
 
 ## Next build work
 
-- **Step 4, tariff builder.** Per-date slots go to `tariff_content_v2`, built as a pure TypeScript function in `app/lib/tariff/`. Unit-test it against the real fixture above.
 - The status UI currently lives on `pages/index.vue`. Step 5 replaces it with the planner and moves status to its own page.
 - Small fix: make `check_site.py` print "not reported" instead of `None` for grid charging.
 

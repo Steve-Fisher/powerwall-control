@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 OUT_DIR = SCRIPTS_DIR / "out"
-SITE_DIR = REPO_ROOT / "site"
+SITE_DIR = REPO_ROOT  # GitHub Pages serves the repo root
 PUBLIC_KEY_PATH = SITE_DIR / ".well-known" / "appspecific" / "com.tesla.3p.public-key.pem"
 
 AUTHORIZE_URL = "https://auth.tesla.com/oauth2/v3/authorize"

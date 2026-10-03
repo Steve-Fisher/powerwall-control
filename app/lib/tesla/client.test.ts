@@ -34,6 +34,35 @@ describe('FleetClient', () => {
     expect(http.requests[2]!.headers).toMatchObject({ Authorization: 'Bearer A2' })
   })
 
+  it('posts the tariff, mode and grid-charging settings to the right endpoints', async () => {
+    const ok = { status: 200, data: { response: { code: 201, message: 'Updated' } } }
+    const http = fakeHttp(ok, ok, ok)
+    const client = new FleetClient(http, testConfig, new TokenManager(http, testConfig, validTokens()))
+
+    await client.setTariff(42, { name: 'T' })
+    await client.setOperationMode(42, 'autonomous')
+    await client.allowGridCharging(42)
+
+    expect(http.requests).toMatchObject([
+      {
+        method: 'POST',
+        url: 'https://fleet-api.example/api/1/energy_sites/42/time_of_use_settings',
+        json: { tou_settings: { tariff_content_v2: { name: 'T' } } },
+        headers: { Authorization: 'Bearer A' },
+      },
+      {
+        method: 'POST',
+        url: 'https://fleet-api.example/api/1/energy_sites/42/operation',
+        json: { default_real_mode: 'autonomous' },
+      },
+      {
+        method: 'POST',
+        url: 'https://fleet-api.example/api/1/energy_sites/42/grid_import_export',
+        json: { disallow_charge_from_grid_with_solar_installed: false },
+      },
+    ])
+  })
+
   it('throws TeslaApiError with the status for other failures', async () => {
     const http = fakeHttp({ status: 404, data: { error: 'not found' } })
     const client = new FleetClient(http, testConfig, new TokenManager(http, testConfig, validTokens()))

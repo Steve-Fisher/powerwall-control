@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Tesla OAuth redirect as a verified App Link (see site/.well-known/assetlinks.json) -->
+            <!-- Tesla OAuth redirect as a verified App Link (see .well-known/assetlinks.json) -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -30,7 +30,7 @@
                 <data android:scheme="https" android:host="powerwall.versible.co.uk" android:pathPrefix="/auth/callback" />
             </intent-filter>
 
-            <!-- Fallback used by site/auth/callback/index.html if the App Link doesn't open the app -->
+            <!-- Fallback used by auth/callback/index.html if the App Link doesn't open the app -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
